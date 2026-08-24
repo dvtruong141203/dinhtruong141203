@@ -3,209 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kho Lưu Trữ Ảnh Trực Tuyến</title>
+    <title>CloudLens - Kho Lưu Trữ Ảnh Đám Mây</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6c5ce7;
-            --primary-hover: #a29bfe;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-gradient: radial-gradient(circle at top left, #1e1b4b, #09090b);
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #a855f7;
+            --glass-bg: rgba(24, 24, 27, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-sub: #a1a1aa;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background: var(--bg-gradient);
             color: #ffffff;
             padding: 20px;
+            overflow-x: hidden;
         }
 
-        .upload-container {
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.4;
+        }
+        body::before {
+            background: var(--primary);
+            top: 10%;
+            left: 15%;
+            animation: float 8s ease-in-out infinite alternate;
+        }
+        body::after {
+            background: var(--accent);
+            bottom: 10%;
+            right: 15%;
+            animation: float 10s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
+        }
+
+        .upload-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 40px;
+            border-radius: 28px;
+            padding: 35px 30px;
             width: 100%;
-            max-width: 450px;
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+            max-width: 440px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             text-align: center;
-            transition: transform 0.3s ease;
+            position: relative;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .upload-container:hover {
-            transform: translateY(-5px);
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-badge {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .logo-badge svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
         }
 
         h2 {
             font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            background: linear-gradient(to right, #ffffff, #d4d4d8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         p.subtitle {
-            font-size: 14px;
-            color: #b2bec3;
-            margin-bottom: 30px;
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 28px;
         }
 
         .drop-zone {
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            padding: 40px 20px;
+            border: 2px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 35px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            background: rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.02);
         }
 
-        .drop-zone.dragover {
+        .drop-zone:hover {
             border-color: var(--primary);
-            background: rgba(108, 92, 231, 0.1);
+            background: rgba(99, 102, 241, 0.04);
+            transform: translateY(-2px);
         }
 
-        .drop-zone-icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-            display: block;
+        .drop-zone svg {
+            width: 40px;
+            height: 40px;
+            fill: #a1a1aa;
+            margin-bottom: 12px;
+            transition: fill 0.3s;
+        }
+
+        .drop-zone:hover svg {
+            fill: var(--primary);
         }
 
         .drop-zone-text {
-            font-size: 15px;
-            color: #dfe6e9;
+            font-size: 14px;
+            color: #d4d4d8;
+            font-weight: 500;
+        }
+
+        .drop-zone-text span {
+            color: var(--primary);
+            font-weight: 600;
         }
 
         #fileInput {
             display: none;
         }
 
+        /* Khung xem trước ảnh: Hiển thị trọn vẹn toàn bộ ảnh */
         .preview-container {
             display: none;
-            margin-top: 20px;
+            margin-top: 15px;
             position: relative;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             border: 1px solid var(--glass-border);
+            background: rgba(0, 0, 0, 0.4);
+            max-height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
 
         .preview-container img {
             width: 100%;
-            height: auto;
+            height: 100%;
+            max-height: 300px;
+            object-fit: contain; /* QUAN TRỌNG: Giúp hiển thị trọn vẹn 100% kích thước ảnh, không bị cắt xén */
             display: block;
-            object-fit: cover;
-            max-height: 250px;
+            margin: 0 auto;
         }
 
         .remove-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             cursor: pointer;
-            font-size: 16px;
-            backdrop-filter: blur(5px);
-            transition: background 0.3s;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.2s;
+            z-index: 10;
         }
 
         .remove-btn:hover {
-            background: rgba(255, 71, 87, 0.8);
+            background: rgba(239, 68, 68, 0.9);
+            transform: scale(1.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 0;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            margin-top: 24px;
+            display: none;
+            box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
         }
 
         .submit-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 15px 0;
-            width: 100%;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 25px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(108, 92, 231, 0.3);
-            display: none;
         }
 
         .submit-btn:hover {
-            background: var(--primary-hover);
-            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
+            opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 15px 25px -5px rgba(99, 102, 241, 0.6);
         }
 
         .submit-btn:disabled {
-            background: #636e72;
+            background: #3f3f46;
             cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .reset-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f4f4f5;
+            border: 1px solid var(--glass-border);
+            margin-top: 12px;
+            display: none;
             box-shadow: none;
         }
 
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
         .status-msg {
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 16px;
+            font-size: 13px;
+            padding: 12px 16px;
+            border-radius: 12px;
             opacity: 0;
-            transition: opacity 0.3s;
-            padding: 12px;
-            border-radius: 8px;
+            transition: all 0.3s ease;
             word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .status-msg.show {
             opacity: 1;
         }
         
-        .status-msg.success { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
-        .status-msg.error { background: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid rgba(231, 76, 60, 0.3); }
-        .status-msg.loading { background: rgba(241, 196, 15, 0.2); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.3); }
+        .status-msg.success { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-msg.error { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .status-msg.loading { background: rgba(234, 179, 8, 0.12); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.2); }
 
         .result-link {
-            margin-top: 10px;
+            margin-top: 14px;
             font-size: 13px;
-            color: #a29bfe;
+            color: #818cf8;
             display: none;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .result-link:hover {
+            color: #a5b4fc;
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="upload-container">
-        <h2>Kho Lưu Trữ Ảnh</h2>
-        <p class="subtitle">Tải ảnh lên và lưu trực tiếp vào Drive</p>
+    <div class="upload-card">
+        <div class="logo-badge">
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4 0-2.05 1.53-3.76 3.56-3.97l1.07-.11.5-.95C8.08 7.14 9.94 6 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5 1.53.11c1.56.1 2.78 1.41 2.78 2.96 0 1.65-1.35 3-3 3z"/></svg>
+        </div>
+
+        <h2>CloudLens Storage</h2>
+        <p class="subtitle">Tải ảnh lên Google Drive bảo mật & tốc độ cao</p>
 
         <div class="drop-zone" id="dropZone">
-            <span class="drop-zone-icon">📁</span>
-            <span class="drop-zone-text">Kéo thả ảnh vào đây hoặc Click để chọn</span>
+            <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5-5-5 5h3v4h4v-4h3z"/></svg>
+            <div class="drop-zone-text">Kéo thả ảnh vào đây hoặc <span>chọn file</span></div>
             <input type="file" id="fileInput" accept="image/*">
         </div>
 
-        <div class="preview-container" id="previewContainer">
-            <button type="button" class="remove-btn" id="removeBtn">×</button>
-            <img id="imagePreview" src="" alt="Image Preview">
+        <!-- Khung xem trước ảnh trọn vẹn -->
+        <div class="preview-container" id="previewContainer" style="display: none;">
+            <button type="button" class="remove-btn" id="removeBtn">&times;</button>
+            <img id="imagePreview" src="" alt="Preview">
         </div>
 
-        <button type="button" class="submit-btn" id="submitBtn">Tải Ảnh Lên</button>
+        <button type="button" class="btn submit-btn" id="submitBtn">Tải Ảnh Lên Ngay</button>
+        <button type="button" class="btn reset-btn" id="resetBtn">Tải ảnh khác ➕</button>
+        
         <div class="status-msg" id="statusMsg"></div>
-        <a id="resultLink" class="result-link" href="#" target="_blank">Xem ảnh vừa tải lên</a>
+        <a id="resultLink" class="result-link" href="#" target="_blank">🔗 Mở link xem ảnh trực tuyến</a>
     </div>
 
     <script>
-        // API Web App của bạn đã được gắn vào đây
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxwNLGm9n2BPvdJLgYMV-frOuYGrNzdrvbplYpHqquroCm-C_sJD7eAgrTTRWv-oEdY3Q/exec';
 
         const dropZone = document.getElementById('dropZone');
@@ -214,6 +330,7 @@
         const imagePreview = document.getElementById('imagePreview');
         const removeBtn = document.getElementById('removeBtn');
         const submitBtn = document.getElementById('submitBtn');
+        const resetBtn = document.getElementById('resetBtn');
         const statusMsg = document.getElementById('statusMsg');
         const resultLink = document.getElementById('resultLink');
 
@@ -221,31 +338,15 @@
 
         dropZone.addEventListener('click', () => fileInput.click());
 
-        ['dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        dropZone.addEventListener('dragover', () => dropZone.classList.add('dragover'));
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-
-        dropZone.addEventListener('drop', (e) => {
-            dropZone.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length) handleFile(files[0]);
-        });
-
         fileInput.addEventListener('change', function() {
-            if (this.files.length) handleFile(this.files[0]);
+            if (this.files && this.files[0]) {
+                handleFile(this.files[0]);
+            }
         });
 
         function handleFile(file) {
             if (!file.type.startsWith('image/')) {
-                showStatus('Vui lòng chỉ chọn file hình ảnh!', 'error');
+                showStatus('Vui lòng chỉ chọn tệp hình ảnh!', 'error');
                 return;
             }
             currentFile = file;
@@ -254,22 +355,29 @@
             reader.onload = e => {
                 imagePreview.src = e.target.result;
                 dropZone.style.display = 'none';
-                previewContainer.style.display = 'block';
+                previewContainer.style.display = 'flex'; // Hiển thị khung chứa ảnh căn giữa
                 submitBtn.style.display = 'block';
+                resetBtn.style.display = 'none';
                 hideStatus();
             }
             reader.readAsDataURL(file);
         }
 
-        removeBtn.addEventListener('click', () => {
+        removeBtn.addEventListener('click', resetForm);
+        resetBtn.addEventListener('click', resetForm);
+
+        function resetForm() {
             currentFile = null;
             fileInput.value = '';
+            imagePreview.src = '';
             dropZone.style.display = 'block';
             previewContainer.style.display = 'none';
             submitBtn.style.display = 'none';
+            resetBtn.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Tải Ảnh Lên Ngay';
             hideStatus();
-            resultLink.style.display = 'none';
-        });
+        }
 
         function showStatus(text, type) {
             statusMsg.textContent = text;
@@ -285,9 +393,9 @@
             if (!currentFile) return;
 
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Đang tải lên... ⏳';
+            submitBtn.textContent = 'Đang đồng bộ đám mây... ⏳';
             removeBtn.style.display = 'none';
-            showStatus('Đang gửi ảnh vào hệ thống...', 'loading');
+            showStatus('Đang mã hóa và đẩy dữ liệu lên Drive...', 'loading');
 
             const reader = new FileReader();
             reader.onload = function(event) {
@@ -304,18 +412,16 @@
                 .then(response => response.json())
                 .then(result => {
                     if (result.status === "success") {
-                        showStatus('Tải lên thành công!', 'success');
+                        showStatus('Đã tải lên thành công!', 'success');
                         resultLink.href = result.url;
                         resultLink.style.display = 'block';
                         
-                        // Form tự động reset sau 5 giây để bạn thấy được link xem ảnh
-                        setTimeout(() => {
-                            removeBtn.click();
-                        }, 5000);
+                        submitBtn.style.display = 'none';
+                        resetBtn.style.display = 'block';
                     } else {
                         showStatus('Lỗi: ' + result.message, 'error');
                         submitBtn.disabled = false;
-                        submitBtn.textContent = 'Tải Ảnh Lên';
+                        submitBtn.textContent = 'Tải Ảnh Lên Ngay';
                         removeBtn.style.display = 'block';
                     }
                 })
@@ -323,7 +429,7 @@
                     showStatus('Lỗi kết nối mạng, vui lòng thử lại!', 'error');
                     console.error(error);
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Tải Ảnh Lên';
+                    submitBtn.textContent = 'Tải Ảnh Lên Ngay';
                     removeBtn.style.display = 'block';
                 });
             };
