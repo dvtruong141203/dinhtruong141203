@@ -2,20 +2,21 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Tra cứ online</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Tra cứu online</title>
   <style>
     :root { --bg: #09090b; --surface: rgba(24, 24, 27, 0.7); --border: rgba(255,255,255,0.1); --text: #fafafa; --muted: #a1a1aa; --primary: #8b5cf6; --primary-glow: rgba(139, 92, 246, 0.4); --success: #34d399; --warning: #fbbf24; --danger: #fb7185; }
-    * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
+    * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
     body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px 20px 100px 20px; background-image: radial-gradient(circle at 50% 10%, rgba(139, 92, 246, 0.15), transparent 60%); background-attachment: fixed; }
     
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 40px; margin: 0 auto; width: 100%; max-width: 480px; backdrop-filter: blur(24px); box-shadow: 0 25px 50px rgba(0,0,0,0.4); text-align: center; animation: fadeUp 0.4s ease;}
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 40px; margin: 0 auto; width: 100%; max-width: 480px; -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); box-shadow: 0 25px 50px rgba(0,0,0,0.4); text-align: center; animation: fadeUp 0.4s ease;}
     @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     
-    .title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+    .title { font-size: 24px; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;}
     .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 30px; }
 
-    .input-wrapper { background: rgba(0,0,0,0.3); border: 2px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 20px; transition: 0.3s; text-align: left; }
+    .input-wrapper { background: rgba(0,0,0,0.3); border: 2px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 24px; transition: 0.3s; text-align: left; }
     .input-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
     .input-wrapper label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
     .input-wrapper input { width: 100%; background: transparent; border: none; color: var(--text); font-size: 18px; font-weight: 700; outline: none; font-family: monospace; }
@@ -25,22 +26,26 @@
     .btn-submit:disabled { opacity: 0.5; pointer-events: none; }
     .msg { margin-top: 20px; font-weight: 600; font-size: 14px; min-height: 20px; text-align: center; }
 
-    /* MENU DƯỚI CÙNG */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24,24,27,0.85); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); z-index: 1000; }
-    .bottom-nav a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: 0.3s; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24,24,27,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); z-index: 1000; }
+    .bottom-nav a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: color 0.3s; }
     .bottom-nav a:hover, .bottom-nav a.active { color: var(--primary); }
     .bottom-nav a svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     /* POPUP CHUNG */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
     .overlay.show { display: flex; }
-    .modal { background: rgba(30,41,59,0.95); border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 0 50px rgba(0,0,0,0.5); transform: scale(0.95); transition: 0.3s ease; position: relative; }
-    .overlay.show .modal { transform: scale(1); }
+    .modal { background: rgba(30,41,59,0.95); border: 1px solid var(--border); border-radius: 28px; padding: 32px 28px; width: 100%; max-width: 420px; box-shadow: 0 0 50px rgba(0,0,0,0.5); -webkit-transform: scale(0.95); transform: scale(0.95); transition: transform 0.3s ease; position: relative;}
+    .overlay.show .modal { -webkit-transform: scale(1); transform: scale(1); }
+    
+    .modal-header { display: flex; justify-content: center; align-items: center; margin-bottom: 24px; position: relative; }
+    .modal-header h3 { font-weight: 800; font-size: 18px; margin: 0; text-align: center; width: 100%; text-transform: uppercase; letter-spacing: 1px;}
+    .modal-header button { position: absolute; right: -5px; top: -10px; background: none; border: none; color: var(--muted); font-size: 28px; cursor: pointer; padding: 5px; }
+
     .m-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14.5px; }
     .m-row:last-child { border: none; padding-bottom: 0; }
     .m-lbl { color: var(--muted); font-weight: 600; }
-    .m-val { font-weight: 700; text-align: right; color: var(--text); }
-    .badge { padding: 6px 14px; border-radius: 12px; font-size: 12px; font-weight: 800; display: inline-block; text-transform: uppercase; border: 1px solid transparent; }
+    .m-val { font-weight: 700; text-align: right; color: var(--text); word-break: break-word;}
+    .badge { padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 800; display: inline-block; text-transform: uppercase; border: 1px solid transparent; letter-spacing: 0.5px;}
     .b-pend { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: rgba(251, 191, 36, 0.2); }
     .b-succ { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(52, 211, 153, 0.2); }
     .b-fail { background: rgba(244, 63, 94, 0.1); color: var(--danger); border-color: rgba(251, 113, 133, 0.2); }
@@ -71,24 +76,24 @@
   <!-- BẢNG POPUP HIỂN THỊ KẾT QUẢ -->
   <div class="overlay" id="modal" onclick="if(event.target.id==='modal') this.classList.remove('show')">
     <div class="modal">
-      <div style="margin-bottom: 24px; text-align: center; position: relative;">
-        <h3 style="font-weight: 800; font-size: 18px; margin: 0;">THÔNG TIN THANH TOÁN</h3>
-        <button style="position: absolute; right: -10px; top: -10px; background:none; border:none; color:var(--muted); font-size:28px; cursor:pointer;" onclick="document.getElementById('modal').classList.remove('show')">×</button>
+      <div class="modal-header">
+        <h3>THÔNG TIN THANH TOÁN</h3>
+        <button onclick="document.getElementById('modal').classList.remove('show')">×</button>
       </div>
       
-      <div class="m-row"><span class="m-lbl">Mã giao dịch</span><span class="m-val" style="font-family:monospace; color:var(--primary);" id="m-id"></span></div>
+      <div class="m-row"><span class="m-lbl">Mã giao dịch</span><span class="m-val" style="font-family:monospace; color:var(--primary); font-size: 16px;" id="m-id"></span></div>
       <div class="m-row"><span class="m-lbl">Thời gian tạo</span><span class="m-val" id="m-time"></span></div>
       <div class="m-row"><span class="m-lbl">Thời gian thanh toán</span><span class="m-val" id="m-paytime"></span></div>
       <div class="m-row"><span class="m-lbl">Số tiền</span><span class="m-val" id="m-amount" style="font-size:18px;"></span></div>
-      <div class="m-row" style="margin-top: 8px;"><span class="m-lbl">Trạng thái</span><span class="m-val" id="m-status"></span></div>
+      <div class="m-row" style="margin-top: 12px; border-bottom: none;"><span class="m-lbl">Trạng thái</span><span class="m-val" id="m-status"></span></div>
     </div>
   </div>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxLcE6Omn3QKXFi1SBB7A4CtsEjr-iB_qNQ5qrjy5AHagHsjTufNFA9MNqUTmq0ggle/exec";
 
-    // Hàm chuẩn hóa Trạng Thái
     function chuanHoaTrangThai(rawStatus) {
+      if (!rawStatus) return 'Thất bại';
       if (rawStatus.includes('Chờ')) return 'Chờ thanh toán';
       if (rawStatus.includes('Đã') || rawStatus.includes('Hoàn')) return 'Đã thanh toán';
       return 'Thất bại';
@@ -113,9 +118,9 @@
           
           let stt = chuanHoaTrangThai(res.data.trangThai);
           let bCls = (stt === 'Chờ thanh toán') ? 'b-pend' : (stt === 'Đã thanh toán' ? 'b-succ' : 'b-fail');
-          let displayPayTime = (stt === 'Đã thanh toán' && res.data.hoanTatLuc && !res.data.hoanTatLuc.includes('---')) ? res.data.hoanTatLuc : '-----';
+          let displayPayTime = (stt === 'Đã thanh toán' && res.data.hoanTatLuc && res.data.hoanTatLuc.indexOf('---') === -1) ? res.data.hoanTatLuc : '-----';
 
-          // Gắn vào Popup chuẩn
+          // Gắn vào Popup
           document.getElementById("m-id").innerText = res.data.maGiaoDich;
           document.getElementById("m-time").innerText = res.data.thoiGianTao;
           document.getElementById("m-paytime").innerText = displayPayTime;
@@ -123,6 +128,10 @@
           document.getElementById("m-status").innerHTML = `<span class="badge ${bCls}">${stt}</span>`;
           
           document.getElementById("modal").classList.add("show");
+          
+          // TỰ ĐỘNG XÓA MÃ TÌM KIẾM ĐỂ LẦN SAU NHẬP TIẾP
+          document.getElementById("searchId").value = "";
+          
         } else showMsg("❌ Không tìm thấy giao dịch này", false);
       }).catch(e => { btn.disabled = false; btn.innerText = "TÌM KIẾM"; showMsg("❌ Lỗi kết nối mạng", false); });
     }
