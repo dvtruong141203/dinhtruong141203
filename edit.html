@@ -2,16 +2,18 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Cập nhật đơn</title>
   <style>
     :root { --bg: #09090b; --surface: rgba(24, 24, 27, 0.7); --border: rgba(255,255,255,0.1); --text: #fafafa; --muted: #a1a1aa; --primary: #3b82f6; --primary-glow: rgba(59, 130, 246, 0.3); --success: #34d399; --danger: #fb7185; }
-    * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
+    * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
     body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px 20px 100px 20px; background-image: radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.15), transparent 40%); background-attachment: fixed; }
     
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 40px; width: 100%; max-width: 480px; backdrop-filter: blur(20px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); animation: fadeUp 0.4s ease; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 40px; width: 100%; max-width: 480px; -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); box-shadow: 0 25px 50px rgba(0,0,0,0.5); animation: fadeUp 0.4s ease; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-    .title { font-size: 24px; font-weight: 800; margin-bottom: 8px; text-align: center; }
+    
+    .title { font-size: 24px; font-weight: 800; margin-bottom: 8px; text-align: center; text-transform: uppercase; letter-spacing: 1px;}
     .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 30px; text-align: center; }
     
     .input-wrapper { background: rgba(0,0,0,0.3); border: 2px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 20px; transition: 0.3s; text-align: left; }
@@ -26,9 +28,8 @@
     .btn-submit:disabled { opacity: 0.5; pointer-events: none; }
     .msg { margin-top: 20px; font-weight: 600; font-size: 14px; text-align: center; }
 
-    /* MENU DƯỚI CÙNG */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24,24,27,0.85); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); z-index: 1000; }
-    .bottom-nav a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: 0.3s; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24,24,27,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); z-index: 1000; }
+    .bottom-nav a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: color 0.3s; }
     .bottom-nav a:hover, .bottom-nav a.active { color: var(--primary); }
     .bottom-nav a svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   </style>
@@ -37,7 +38,7 @@
 
   <!-- KHUNG 1: TÌM KIẾM -->
   <div class="card" id="searchBox">
-    <div class="title">Sửa Thông Tin Đơn</div>
+    <div class="title">Sửa Thông Tin</div>
     <div class="subtitle">Tìm mã giao dịch để mở quyền chỉnh sửa</div>
 
     <div class="input-wrapper">
@@ -45,24 +46,24 @@
       <input type="text" id="findId" style="font-family:monospace;" placeholder="VD: 260901123456" autocomplete="off">
     </div>
 
-    <button class="btn-submit" id="btnFind" style="background:#fff; color:#000;" onclick="timDonDeSua()">TÌM KIẾM ĐƠN</button>
+    <button class="btn-submit" id="btnFind" style="background:#fff; color:#000; box-shadow: none;" onclick="timDonDeSua()">TÌM KIẾM ĐƠN</button>
     <div id="searchMsg" class="msg"></div>
   </div>
 
   <!-- KHUNG 2: CHỈNH SỬA THÔNG TIN CHI TIẾT (Ẩn đi, chỉ hiện khi tìm thấy) -->
   <div class="card" id="editBox" style="display: none;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
-      <h3 style="font-weight: 800; font-size: 18px;">CẬP NHẬT DỮ LIỆU</h3>
-      <button style="background:none; border:none; color:var(--muted); font-size:14px; cursor:pointer;" onclick="quayLai()">Tìm mã khác</button>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+      <h3 style="font-weight: 800; font-size: 18px; margin:0;">CẬP NHẬT DỮ LIỆU</h3>
+      <button style="background:rgba(255,255,255,0.1); border:none; color:var(--text); padding: 8px 12px; border-radius: 12px; font-size:13px; font-weight: 600; cursor:pointer;" onclick="quayLai()">Đổi mã khác</button>
     </div>
 
-    <div class="input-wrapper" style="opacity: 0.5; background:transparent;">
+    <div class="input-wrapper" style="opacity: 0.6; background:transparent;">
       <label>Mã giao dịch (Không thể đổi)</label>
-      <input type="text" id="editId" readonly style="font-family:monospace;">
+      <input type="text" id="editId" readonly style="font-family:monospace; color: var(--primary);">
     </div>
 
     <div class="input-wrapper">
-      <label>Số tiền</label>
+      <label>Số tiền (VNĐ)</label>
       <input type="text" id="editAmount" inputmode="numeric" oninput="formatTien(this)">
     </div>
 
@@ -80,7 +81,7 @@
       <input type="text" id="editPayTime" placeholder="VD: 08:15:20 01/09/2026">
     </div>
 
-    <button class="btn-submit" id="btnSubmit" onclick="guiCapNhat()">LƯU THAY ĐỔI VÀO HỆ THỐNG</button>
+    <button class="btn-submit" id="btnSubmit" onclick="guiCapNhat()">LƯU VÀO HỆ THỐNG</button>
     <div id="msg" class="msg"></div>
   </div>
 
@@ -94,8 +95,8 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxLcE6Omn3QKXFi1SBB7A4CtsEjr-iB_qNQ5qrjy5AHagHsjTufNFA9MNqUTmq0ggle/exec";
     
-    // Hàm chuẩn hóa Trạng Thái
     function chuanHoaTrangThai(rawStatus) {
+      if (!rawStatus) return 'Thất bại';
       if (rawStatus.includes('Chờ')) return 'Chờ thanh toán';
       if (rawStatus.includes('Đã') || rawStatus.includes('Hoàn')) return 'Đã thanh toán';
       return 'Thất bại';
@@ -135,12 +136,14 @@
           document.getElementById("editId").value = res.data.maGiaoDich;
           document.getElementById("editAmount").value = res.data.soTien.toLocaleString('vi-VN');
           
-          // Gắn chuẩn 3 từ cho thẻ <select>
           let stt = chuanHoaTrangThai(res.data.trangThai);
           document.getElementById("editStatus").value = stt;
           
           let payTime = res.data.hoanTatLuc;
-          document.getElementById("editPayTime").value = (payTime.includes('---') || stt === 'Chờ thanh toán') ? "" : payTime;
+          document.getElementById("editPayTime").value = (payTime.indexOf('---') !== -1 || stt === 'Chờ thanh toán') ? "" : payTime;
+          
+          // TỰ ĐỘNG XÓA MÃ Ở TRANG TÌM KIẾM CŨ
+          document.getElementById("findId").value = "";
           
         } else showMsg("searchMsg", "❌ Không tìm thấy mã này", false);
       }).catch(e => { btn.disabled = false; btn.innerText = "TÌM KIẾM ĐƠN"; showMsg("searchMsg", "❌ Lỗi mạng", false); });
@@ -156,10 +159,15 @@
 
       let payload = { action: 'updateRecord', id: id, amount: amount, status: status, paymentTime: payTime };
 
-      // Chỉnh lại giờ khi trạng thái là "Đã thanh toán" mà chưa có giờ
       if(status === 'Đã thanh toán' && payTime === "") {
         let d = new Date();
-        payload.paymentTime = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')} ${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+        let h = String(d.getHours()).padStart(2, '0');
+        let m = String(d.getMinutes()).padStart(2, '0');
+        let s = String(d.getSeconds()).padStart(2, '0');
+        let dd = String(d.getDate()).padStart(2, '0');
+        let mm = String(d.getMonth() + 1).padStart(2, '0');
+        let yyyy = d.getFullYear();
+        payload.paymentTime = h + ':' + m + ':' + s + ' ' + dd + '/' + mm + '/' + yyyy;
         document.getElementById("editPayTime").value = payload.paymentTime;
       }
 
@@ -168,11 +176,11 @@
       
       fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(r => r.json()).then(data => {
-        btn.disabled = false; btn.innerText = "LƯU THAY ĐỔI VÀO HỆ THỐNG";
+        btn.disabled = false; btn.innerText = "LƯU VÀO HỆ THỐNG";
         if(data.success) {
           showMsg("msg", `✅ Cập nhật thành công đơn #${id}`, true);
         } else showMsg("msg", "❌ " + data.message, false);
-      }).catch(e => { btn.disabled = false; btn.innerText = "LƯU THAY ĐỔI VÀO HỆ THỐNG"; showMsg("msg", "❌ Lỗi mạng", false); });
+      }).catch(e => { btn.disabled = false; btn.innerText = "LƯU VÀO HỆ THỐNG"; showMsg("msg", "❌ Lỗi mạng", false); });
     }
   </script>
 </body>
