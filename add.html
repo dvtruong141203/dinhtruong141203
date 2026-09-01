@@ -2,51 +2,126 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Nạp tiền</title>
   <style>
-    :root { --bg: #09090b; --surface: rgba(24, 24, 27, 0.7); --border: rgba(255,255,255,0.1); --text: #fafafa; --muted: #a1a1aa; --primary: #8b5cf6; --primary-glow: rgba(139, 92, 246, 0.4); --success: #34d399; --danger: #fb7185; --warning: #fbbf24; }
-    * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent;}
-    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 20px 20px 100px 20px; background-image: radial-gradient(circle at 50% 10%, rgba(139, 92, 246, 0.15), transparent 60%); background-attachment: fixed; }
+    /* ========================================================
+       CẤU HÌNH MÀU SẮC & GIAO DIỆN CHUNG
+       ======================================================== */
+    :root { 
+      --bg: #09090b; --surface: rgba(24, 24, 27, 0.7); --border: rgba(255,255,255,0.1); 
+      --text: #fafafa; --muted: #a1a1aa; 
+      --primary: #8b5cf6; --primary-glow: rgba(139, 92, 246, 0.4); 
+      --success: #34d399; --danger: #fb7185; --warning: #fbbf24; 
+    }
     
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 30px; padding: 40px; margin: 0 auto; width: 100%; max-width: 480px; backdrop-filter: blur(24px); box-shadow: 0 25px 50px rgba(0,0,0,0.4); text-align: center; animation: fadeUp 0.4s ease;}
+    * { 
+      box-sizing: border-box; 
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+      margin: 0; padding: 0; 
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body { 
+      background-color: var(--bg); color: var(--text); min-height: 100vh; 
+      display: flex; flex-direction: column; align-items: center; 
+      padding: 20px 20px 100px 20px; 
+      background-image: radial-gradient(circle at 50% 10%, rgba(139, 92, 246, 0.15), transparent 60%); 
+      background-attachment: fixed; -webkit-font-smoothing: antialiased; 
+    }
+    
+    /* ========================================================
+       THIẾT KẾ CARD TẠO ĐƠN CAO CẤP (ĐÃ CĂN GIỮA MÀN HÌNH)
+       ======================================================== */
+    .card { 
+      background: var(--surface); border: 1px solid var(--border); border-radius: 32px; 
+      padding: 40px 24px; 
+      margin: auto; /* Tự động đẩy form vào chính giữa màn hình theo chiều dọc và ngang */
+      width: 100%; max-width: 450px; 
+      -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); 
+      box-shadow: 0 25px 50px rgba(0,0,0,0.4); text-align: center; animation: fadeUp 0.4s ease;
+    }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
     
-    .title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
-    .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 30px; }
+    .title { font-size: 26px; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; background: linear-gradient(135deg, #fff, #a1a1aa); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+    .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 36px; }
 
-    /* Ô Nhập Tiền Kiểu Mới */
-    .input-giant { display: flex; align-items: center; background: rgba(0,0,0,0.3); border: 2px solid var(--border); border-radius: 24px; padding: 10px; margin-bottom: 20px; transition: 0.3s; }
-    .input-giant:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-glow); }
-    .input-giant button { background: rgba(255,255,255,0.1); color: var(--text); border: none; width: 50px; height: 50px; border-radius: 16px; font-size: 24px; cursor: pointer; transition: 0.2s; }
-    .input-giant button:active { transform: scale(0.9); }
-    .input-giant input { flex: 1; background: transparent; border: none; color: var(--primary); font-size: 36px; font-weight: 800; text-align: center; outline: none; font-family: monospace; width: 100%; min-width: 0;}
+    /* KHUNG NHẬP TIỀN LED 3D (ĐÃ GIẢM KÍCH THƯỚC CHỮ) */
+    .amount-display {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 28px; width: 100%;
+    }
+    
+    .btn-step {
+      width: 56px; height: 56px; flex-shrink: 0; border-radius: 50%;
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+      color: var(--text); font-size: 26px; font-weight: 300;
+      display: flex; justify-content: center; align-items: center;
+      cursor: pointer; transition: 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .btn-step:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
 
-    .chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; }
-    .chip { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text); padding: 12px 0; border-radius: 14px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-    .chip:hover { background: var(--primary); border-color: var(--primary); }
+    .input-box {
+      flex: 1; min-width: 0; 
+      position: relative; background: rgba(0,0,0,0.5); 
+      border: 2px solid rgba(255,255,255,0.05); border-radius: 20px; 
+      padding: 16px 12px; transition: 0.3s; 
+      box-shadow: inset 0 4px 15px rgba(0,0,0,0.5); 
+    }
+    .input-box:focus-within { border-color: var(--primary); box-shadow: inset 0 4px 15px rgba(0,0,0,0.6), 0 0 20px var(--primary-glow); }
+    
+    .input-box input {
+      width: 100%; background: transparent; border: none; color: var(--primary); 
+      font-size: clamp(22px, 6vw, 30px); /* Kích thước số tiền đã được thu nhỏ lại */
+      font-weight: 800; text-align: center; outline: none; 
+      font-family: monospace; letter-spacing: -0.5px;
+      text-overflow: ellipsis; overflow: hidden; white-space: nowrap; 
+    }
 
-    .btn-submit { width: 100%; background: var(--text); color: var(--bg); padding: 18px; border-radius: 18px; font-size: 16px; font-weight: 800; border: none; cursor: pointer; transition: 0.3s; }
-    .btn-submit:active { transform: scale(0.96); }
-    .btn-submit:disabled { opacity: 0.5; pointer-events: none; }
-    .msg { margin-top: 20px; font-weight: 600; font-size: 14px; min-height: 20px; text-align: center; }
+    /* Các nút chọn tiền nhanh */
+    .chips { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 36px; }
+    .chip { 
+      background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01)); 
+      border: 1px solid var(--border); color: var(--text); 
+      padding: 14px 0; border-radius: 16px; font-weight: 700; font-size: 13px;
+      cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .chip:hover { border-color: var(--primary); background: rgba(139, 92, 246, 0.15); color: #fff; box-shadow: 0 6px 15px var(--primary-glow); }
+    .chip:active { transform: scale(0.95); }
 
-    /* MENU DƯỚI CÙNG */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24,24,27,0.85); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); z-index: 1000; }
-    .bottom-nav a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: 0.3s; }
+    /* Nút Xác Nhận Tạo */
+    .btn-submit { 
+      width: 100%; background: linear-gradient(135deg, var(--primary), #ec4899); 
+      color: #fff; padding: 18px; border-radius: 20px; font-size: 16px; font-weight: 800; 
+      border: none; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+      box-shadow: 0 10px 25px var(--primary-glow);
+    }
+    .btn-submit:active { transform: scale(0.96); box-shadow: 0 5px 15px var(--primary-glow); }
+    .btn-submit:disabled { opacity: 0.5; pointer-events: none; filter: grayscale(100%); }
+    .msg { margin-top: 24px; font-weight: 600; font-size: 14px; min-height: 20px; text-align: center; }
+
+    /* ========================================================
+       MENU DƯỚI CÙNG & POPUP CHI TIẾT
+       ======================================================== */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(24,24,27,0.85); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 10px calc(12px + env(safe-area-inset-bottom)); z-index: 1000; }
+    .bottom-nav a { text-decoration: none; color: var(--muted); font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: color 0.3s; }
     .bottom-nav a:hover, .bottom-nav a.active { color: var(--primary); }
     .bottom-nav a svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* POPUP CHUNG */
-    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+    .overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
     .overlay.show { display: flex; }
-    .modal { background: rgba(30,41,59,0.95); border: 1px solid var(--border); border-radius: 24px; padding: 30px; width: 100%; max-width: 420px; box-shadow: 0 0 50px rgba(0,0,0,0.5); transform: scale(0.95); transition: 0.3s ease; position: relative; }
-    .overlay.show .modal { transform: scale(1); }
+    .modal { background: rgba(30,41,59,0.95); border: 1px solid var(--border); border-radius: 28px; padding: 32px 28px; width: 100%; max-width: 420px; box-shadow: 0 0 50px rgba(0,0,0,0.5); -webkit-transform: scale(0.95); transform: scale(0.95); transition: transform 0.3s ease; position: relative;}
+    .overlay.show .modal { -webkit-transform: scale(1); transform: scale(1); }
+    
+    .modal-header { display: flex; justify-content: center; align-items: center; margin-bottom: 24px; position: relative; }
+    .modal-header h3 { font-weight: 800; font-size: 18px; margin: 0; text-align: center; width: 100%; text-transform: uppercase; letter-spacing: 1px;}
+    .modal-header button { position: absolute; right: -5px; top: -10px; background: none; border: none; color: var(--muted); font-size: 28px; cursor: pointer; padding: 5px; }
+
     .m-row { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14.5px; }
     .m-row:last-child { border: none; padding-bottom: 0; }
     .m-lbl { color: var(--muted); font-weight: 600; }
-    .m-val { font-weight: 700; text-align: right; color: var(--text); }
-    .badge { padding: 6px 14px; border-radius: 12px; font-size: 12px; font-weight: 800; display: inline-block; text-transform: uppercase; border: 1px solid transparent; }
+    .m-val { font-weight: 700; text-align: right; color: var(--text); word-break: break-word;}
+    .badge { padding: 8px 14px; border-radius: 12px; font-size: 12px; font-weight: 800; display: inline-block; text-transform: uppercase; border: 1px solid transparent; letter-spacing: 0.5px;}
     .b-pend { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: rgba(251, 191, 36, 0.2); }
   </style>
 </head>
@@ -56,10 +131,12 @@
     <div class="title">Nạp Tiền</div>
     <div class="subtitle">Khởi tạo mã hóa đơn tự động</div>
 
-    <div class="input-giant">
-      <button onclick="stepTien(-1000)">-</button>
-      <input type="text" id="addAmount" placeholder="0" inputmode="numeric" oninput="formatTien(this)">
-      <button onclick="stepTien(1000)">+</button>
+    <div class="amount-display">
+      <button class="btn-step" onclick="stepTien(-1000)">−</button>
+      <div class="input-box">
+        <input type="text" id="addAmount" placeholder="0" inputmode="numeric" oninput="formatTien(this)" autocomplete="off">
+      </div>
+      <button class="btn-step" onclick="stepTien(1000)">+</button>
     </div>
 
     <div class="chips">
@@ -80,18 +157,19 @@
     <a href="edit.html"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Cập nhật</a>
   </div>
 
+  <!-- POPUP CHI TIẾT -->
   <div class="overlay" id="modal" onclick="if(event.target.id==='modal') this.classList.remove('show')">
     <div class="modal">
-      <div style="margin-bottom: 24px; text-align: center; position: relative;">
-        <h3 style="font-weight: 800; font-size: 18px; margin: 0;">THÔNG TIN THANH TOÁN</h3>
-        <button style="position: absolute; right: -10px; top: -10px; background:none; border:none; color:var(--muted); font-size:28px; cursor:pointer;" onclick="document.getElementById('modal').classList.remove('show')">×</button>
+      <div class="modal-header">
+        <h3>THÔNG TIN THANH TOÁN</h3>
+        <button onclick="document.getElementById('modal').classList.remove('show')">×</button>
       </div>
       
-      <div class="m-row"><span class="m-lbl">Mã giao dịch</span><span class="m-val" style="font-family:monospace; color:var(--primary);" id="m-id"></span></div>
-      <div class="m-row"><span class="m-lbl">Thời gian tạo</span><span class="m-val" id="m-time">Vừa xong</span></div>
+      <div class="m-row"><span class="m-lbl">Mã giao dịch</span><span class="m-val" style="font-family:monospace; color:var(--primary); font-size: 16px;" id="m-id"></span></div>
+      <div class="m-row"><span class="m-lbl">Thời gian tạo</span><span class="m-val" id="m-time"></span></div>
       <div class="m-row"><span class="m-lbl">Thời gian thanh toán</span><span class="m-val" id="m-paytime">-----</span></div>
       <div class="m-row"><span class="m-lbl">Số tiền</span><span class="m-val" id="m-amount" style="font-size:18px;"></span></div>
-      <div class="m-row" style="margin-top: 8px;"><span class="m-lbl">Trạng thái</span><span class="m-val" id="m-status"><span class="badge b-pend">Chờ thanh toán</span></span></div>
+      <div class="m-row" style="margin-top: 12px; border-bottom: none;"><span class="m-lbl">Trạng thái</span><span class="m-val" id="m-status"><span class="badge b-pend">Chờ thanh toán</span></span></div>
     </div>
   </div>
 
@@ -119,25 +197,43 @@
       document.getElementById("addMsg").innerHTML = `<span style="color: ${isSuccess ? 'var(--success)' : 'var(--danger)'}">${msg}</span>`;
     }
 
+    function layGioHienTai() {
+      let d = new Date();
+      let h = String(d.getHours()).padStart(2, '0');
+      let m = String(d.getMinutes()).padStart(2, '0');
+      let s = String(d.getSeconds()).padStart(2, '0');
+      let dd = String(d.getDate()).padStart(2, '0');
+      let mm = String(d.getMonth() + 1).padStart(2, '0');
+      let yyyy = d.getFullYear();
+      return h + ':' + m + ':' + s + ' ' + dd + '/' + mm + '/' + yyyy;
+    }
+
     function taoDon() {
       let amount = getRawVal();
       if(amount < 2000) return showMsg("❌ Số tiền tối thiểu 2.000đ", false);
       
       const btn = document.getElementById("btnAddSubmit");
-      btn.disabled = true; btn.innerText = "ĐANG TẠO...";
+      btn.disabled = true; btn.innerText = "ĐANG XỬ LÝ...";
       document.getElementById("addMsg").innerHTML = "";
       
       fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addRecord', amount: amount }) })
-      .then(r => r.json()).then(data => {
-        btn.disabled = false; btn.innerText = "NẠP TIỀN";
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        btn.disabled = false; btn.innerText = "TẠO MÃ GIAO DỊCH";
         if(data.success) {
-          // Gắn dữ liệu vào Popup chuẩn
           document.getElementById("m-id").innerText = data.data.id;
+          document.getElementById("m-time").innerText = layGioHienTai(); 
           document.getElementById("m-amount").innerText = amount.toLocaleString('vi-VN') + " đ";
+          
           document.getElementById("modal").classList.add("show");
-          document.getElementById("addAmount").value = "";
-        } else showMsg("❌ " + data.message, false);
-      }).catch(e => { btn.disabled = false; btn.innerText = "NẠP TIỀN"; showMsg("❌ Lỗi kết nối mạng", false); });
+          document.getElementById("addAmount").value = ""; 
+        } else {
+          showMsg("❌ " + data.message, false);
+        }
+      }).catch(function(e) { 
+        btn.disabled = false; btn.innerText = "TẠO MÃ GIAO DỊCH"; 
+        showMsg("❌ Lỗi kết nối mạng", false); 
+      });
     }
   </script>
 </body>
